@@ -1,0 +1,108 @@
+----------------------Simone Masiero AI cup.----------------------
+
+
+N.B. all the tsp instances are in folder `./sets`, if you want to
+change those make sure the has the same name and they're into that 
+folder as my solution use a relative path.
+
+
+----------INSTRUCTION ON HOW TO COMPILE/RUN THE SOFTWARE----------
+
+- unzip my submission simone.masiero.zip
+- from terminal, go to that folder (it should contain 7 classes)
+- run `$ javac -O Main.java ` to compile it
+- run `$ java Main <problem_number>`
+
+exampe to run the solver for ch130 : `java Main 0` 
+
+-------------------------------------------------------------------
+
+
+
+
+----------------------------PARAMETERS-----------------------------
+
+The only parameter to use it the problem number, an integer
+between 0 and 9 where:
+
+0 - ch130.tsp
+1 - d198.tsp
+2 - eil76.tsp
+3 - fl1577.tsp
+4 - kroA100.tsp
+5 - lin318.tsp
+6 - pcb442.tsp
+7 - pr439.tsp
+8 - rat783.tsp
+9 - u1060.tsp
+
+with the provided configuration best found seeds
+are automatically chosen
+
+-------------------------------------------------------------------
+
+
+
+
+----------------------------SYSTEM SPECS----------------------------
+
+MacBook Pro (Retina, 15-inch, Mid 2015)
+
+OS              : macOS Mojave 10.14
+Processor       : 2.5 GHz Intel Core i7
+Memory          : 16 GB 1600 MHz DDR3
+Kernel          : Linux kernel v 18.0.0
+Compiler        : javac 1.8.0_121
+
+--------------------------------------------------------------------
+
+
+
+
+------------------------------APPROACH------------------------------
+
+For my implementation i used Ant colony system with 2-opt in JAVA
+Firstly a random solution is generated, the optimised and the lenght 
+is used to fill the initial Tau0.
+
+The two opt was originally ment to accept the first improvement but 
+then i found better result without that rule.
+
+Ant colony specs will follow.
+
+
+Class structure is the following :
+
+Solution - born as an interface for ants it become a full class with
+the two-optimize method inside. As it describe a solution it has an
+ArrayList of nodes which is actually the solution path as well as the
+tour length stored in it.
+
+Shark - It extends solution and its basically the Ant class
+(With and angrier name!). Local updates depends on Ro
+
+SharkColony - classical implementation of AntColony
+(again with a name improvement) with the following parameters:
+
+ population size    : 5
+ Q0                 : 0.9      the pheromone strength
+ beta               : 2        expectation heuristic factor
+ alpha              : 0.1      heuristic factor
+ ro                 : 0.1      the pheromone evaporation factor
+ Tau0               : fraction based on the length of the random
+                      tour updated with two-opt
+
+Main - After passing the seed and the problem the main class will
+instantiate an Extractor instance which just parse the file and
+retrieve data from the .tsp file.
+
+Node - A node is represented by its coordinates and an Array of
+distances from other nodes. You can set and get distances between nodes.
+
+RandomSolution - An initial random solution is generated and optimised
+with two-opt. Basically this is just used to set the base level of
+pheromone for the colony.
+
+Extractor - just parse the .tsp file and extract data.
+
+--------------------------------------------------------------------
